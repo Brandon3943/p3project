@@ -1,6 +1,8 @@
 import React from 'react'
+import { useState } from 'react'
 
-function UserCard( { name, id, handleDelete } ) {
+function UserCard( { name, id, handleDelete, createNewTicket, userId } ) {
+  
 
   function handleFetchDelete(id) {
     fetch(`http://localhost:9292/customers/${id}`, {
@@ -9,17 +11,20 @@ function UserCard( { name, id, handleDelete } ) {
       
   }
 
+  
 
+  
   return (
-    <div className="userCardsContainer">
-      <div className="userCards">
+    <>
+    <div onClick={() => createNewTicket(id)} className = {userId === id ? "userCardsContainerSelected" : "userCardsContainer"}>
         {name}
          <br></br>
         {id}
         <br></br>
-        <button onClick={() => handleFetchDelete(id)}>Delete</button>
-      </div>
     </div>
+    <br></br>
+    <button onClick={() => handleFetchDelete(id)}>Delete</button>
+    </>
   )
 }
 
