@@ -30,7 +30,7 @@ function NavBar({ updateUsers }) {
     <div className="navBarContainer">
       <h1>Welcome to Philaminos Pizza</h1>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="newCustomer">Name for order</label>
+        <label htmlFor="newCustomer">Name for order: </label>
         <input type="text" id="newCustomer" onChange={handleSetName} value={name} />
         <button type="submit">Start Order</button>
       </form>

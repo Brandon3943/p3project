@@ -3,27 +3,22 @@ import UserCard from './UserCard'
 import ItemCard from './ItemCard'
 import TicketCard from './TicketCard'
 import { useEffect, useState } from 'react'
+import {Link, useHistory} from 'react-router-dom'
 
-function Home({ items, users, handleDelete }) {
+function Home({ itemsList, users, handleDelete, getTicketValue }) {
   const [viewOrder, setViewOrder] = useState([])
   const [itemIdArr, setItemIdArr] = useState([])
   const [userId, setUserId] = useState(null)
-  const [total, setTotal] = useState(0)
-//lowercase snakecase item_ids for join table
-  const [ticket, setTicket] = useState({
-    ticket_id: null,
-    item_id: null
-  })
-
-
+  const history = useHistory()
+  
 
   function handleSubmit(e) {
     e.preventDefault()
     let formData={
-      ticket_id: userId,
-      item_id: itemIdArr
+      customer_id: userId,
+      item_ids: itemIdArr
     }
-    fetch("http://localhost:9292/ticket_items", {
+    fetch("http://localhost:9292/tickets", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,20 +26,22 @@ function Home({ items, users, handleDelete }) {
           },
         body: JSON.stringify(formData)
   }).then(resp => resp.json())
-    .then(data => setTicket(data))
-
+    .then(data => getTicketValue(data))
+    history.push("/recipt")
   }
 
-  console.log(itemIdArr)
-  console.log(userId)
+  let total = viewOrder.reduce((a, b) => {
+    console.log(a)
+   return a + b.price
+  }, 0);
 
-
+  console.log(total)
 
  function addItemsToArray(name, price, id) {
+  console.log("hi")
     setViewOrder(prev => [...prev, {name: name, price: price, id: id}])
-    setItemIdArr(prev => [...prev, id])
+    setItemIdArr(prev => [...prev, id])    
  }
-
 
   function createNewTicket(id) {
     if(userId === id) {
@@ -55,18 +52,20 @@ function Home({ items, users, handleDelete }) {
   }
 
     let ticketItems = viewOrder.map(ticket => {
-      return <TicketCard key={Math.random(Math.floor(ticket.id * 15))} name={ticket.name} price={ticket.price} />
+      return <TicketCard key={Math.random(Math.floor(ticket.id * 15))} name={ticket.name} price={ticket.price} id={ticket.id} setViewOrder={setViewOrder} />
     })
     
 
-    let allItems = items.map(item => {
+    let allItems = itemsList.map(item => {
       return <ItemCard key={item.id} name={item.name} price={item.price} inventory={item.inventory} img={item.img_url} id={item.id} addItemsToArray={addItemsToArray} />
     })
 
     let userNames = users.map(user => <UserCard key={user.id} name={user.name} id={user.id} handleDelete={handleDelete} createNewTicket={createNewTicket} userId={userId} />)
 
 
-    
+   
+  
+  
 
     if(!users.length) {
         return "loading...."
@@ -80,13 +79,19 @@ function Home({ items, users, handleDelete }) {
     </div>
     <div className="order-container">
       {ticketItems}
+      <br></br>
+      {`Total= ${total}$`}
       <form onSubmit={handleSubmit}>
-        <button type="submit">Place order</button>
+        <button type="submit" className="add-button">Place order</button>
       </form>
+      <Link to="/recipt"><button className="add-button">View Recipts</button></Link>
     </div>
     <hr></hr>
     <div className="pizza-container">
       {allItems}
+    </div>
+    <div className="recipt-container">
+      
     </div>
     </>
   )

@@ -2,6 +2,19 @@
     margin-bottom: 25px;
 }
 
+.container button {
+    position: relative;
+    top: 45px;
+    right: 87px;
+}
+
+.order-container {
+   text-align: center;
+   position: relative;
+   left: 40%;
+   width: 180px;
+}
+
 .container, .pizza-container {
     display: flex;
     flex-wrap: wrap;
@@ -41,9 +54,19 @@
     margin: 10px 20px;
 }
 
-h3 {
+.navBarContainer form{
+ position: relative;
+ left: 30%;
+}
+
+h3, h1 {
     text-align: center;
 }
+
+/* #newCustomer {
+   
+} */
+
 
 
 
