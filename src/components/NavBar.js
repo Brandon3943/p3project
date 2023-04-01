@@ -34,6 +34,11 @@ function NavBar({ updateUsers }) {
         <input type="text" id="newCustomer" onChange={handleSetName} value={name} />
         <button type="submit">Start Order</button>
       </form>
+
+      <form>
+        
+
+      </form>
       
     <hr></hr>
     </div>

@@ -2,14 +2,16 @@ import React from 'react'
 import UserCard from './UserCard'
 import ItemCard from './ItemCard'
 import TicketCard from './TicketCard'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {Link, useHistory} from 'react-router-dom'
 
 function Home({ itemsList, users, handleDelete, getTicketValue }) {
   const [viewOrder, setViewOrder] = useState([])
   const [itemIdArr, setItemIdArr] = useState([])
-  const [userId, setUserId] = useState(null)
+  const [userId, setUserId] = useState("")
   const history = useHistory()
+
+  console.log(userId)
   
 
   function handleSubmit(e) {
@@ -26,19 +28,18 @@ function Home({ itemsList, users, handleDelete, getTicketValue }) {
           },
         body: JSON.stringify(formData)
   }).then(resp => resp.json())
-    .then(data => getTicketValue(data))
-    history.push("/recipt")
+    .then(data => {
+      getTicketValue(data)
+      console.log(data)
+      history.push(`/tickets/${data.id}/recipt`)
+    })
   }
 
   let total = viewOrder.reduce((a, b) => {
-    console.log(a)
    return a + b.price
   }, 0);
 
-  console.log(total)
-
  function addItemsToArray(name, price, id) {
-  console.log("hi")
     setViewOrder(prev => [...prev, {name: name, price: price, id: id}])
     setItemIdArr(prev => [...prev, id])    
  }
@@ -60,10 +61,10 @@ function Home({ itemsList, users, handleDelete, getTicketValue }) {
       return <ItemCard key={item.id} name={item.name} price={item.price} inventory={item.inventory} img={item.img_url} id={item.id} addItemsToArray={addItemsToArray} />
     })
 
-    let userNames = users.map(user => <UserCard key={user.id} name={user.name} id={user.id} handleDelete={handleDelete} createNewTicket={createNewTicket} userId={userId} />)
+    let userNames = users.map(user => <option key={user.id} value={user.id}>{user.name}</option>)
 
 
-   
+  
   
   
 
@@ -75,7 +76,10 @@ function Home({ itemsList, users, handleDelete, getTicketValue }) {
     <>
     <h3>Click Name To Create New Order</h3>
     <div className="container">
-      {userNames}
+      <select onChange={(e) => setUserId(e.target.value)} value={userId}>
+          <option>Select Customer</option>
+          {userNames}
+      </select>
     </div>
     <div className="order-container">
       {ticketItems}

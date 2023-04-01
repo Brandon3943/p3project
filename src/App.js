@@ -38,6 +38,9 @@ function App() {
     function updateUsers(newUser) {
       setUsers(prev => [...prev, newUser])
     }
+
+  
+
   
 
   return (
@@ -52,8 +55,8 @@ function App() {
           <Home users={users} itemsList={items} handleDelete={handleDelete} getTicketValue={getTicketValue} />
         </Route>
 
-        <Route path="/recipt">
-          <Recipt ticket={ticket} />
+        <Route path="/tickets/:id/recipt">
+          <Recipt ticket={ticket} getTicketValue={getTicketValue} />
         </Route>
 
       </Switch>
